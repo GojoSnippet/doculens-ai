@@ -13,7 +13,7 @@ import { encodeBase64 } from '@/utils/base64';
 
 export const dynamic = 'force-dynamic';
 
-export const maxDuration = 800;
+export const maxDuration = 300;
 
 const embeddingModel = openai.embedding('text-embedding-3-small');
 
