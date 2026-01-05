@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/server/server';
+import { createServerClient } from '@supabase/ssr';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,10 +28,29 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  try {
-    const supabase = await createServerSupabaseClient();
+  // Create response first so we can set cookies on it
+  const response = NextResponse.redirect(`${origin}/chat`);
 
-    // Exchange the code for a session - this also sets the session cookies
+  try {
+    // Create Supabase client that sets cookies on the response
+    const supabase = createServerClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              response.cookies.set(name, value, options);
+            });
+          },
+        },
+      }
+    );
+
+    // Exchange the code for a session - this sets the session cookies on response
     const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
     if (exchangeError) {
@@ -41,8 +60,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Successful authentication - redirect to chat
-    return NextResponse.redirect(`${origin}/chat`);
+    // Return response with cookies set
+    return response;
   } catch (err) {
     console.error('OAuth callback error:', err);
     return NextResponse.redirect(
