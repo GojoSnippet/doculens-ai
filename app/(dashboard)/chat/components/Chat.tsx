@@ -67,7 +67,10 @@ const ChatComponent: React.FC<ChatProps> = ({
 
   const { messages, status, sendMessage, stop } = useChat({
     transport: new DefaultChatTransport({
-      api: '/api/chat'
+      api: '/api/chat',
+      body: {
+        chatId: chatId
+      }
     }),
     generateId: () => crypto.randomUUID(),
     experimental_throttle: 50,
