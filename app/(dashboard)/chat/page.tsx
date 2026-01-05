@@ -5,7 +5,7 @@ import DocumentViewer from './components/PDFViewer';
 import WebsiteWiever from './components/WebsiteWiever';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserInfo } from '@/lib/server/supabase';
-import { createClient } from '@/lib/client/client';
+import { createServerSupabaseClient } from '@/lib/server/server';
 
 interface PageProps {
   searchParams: Promise<Record<string, string>>;
@@ -42,7 +42,7 @@ async function DocumentComponent({ fileName }: { fileName: string }) {
 
   if (userId) {
     try {
-      const supabase = createClient();
+      const supabase = await createServerSupabaseClient();
       const decodedFileName = decodeURIComponent(fileName);
       const filePath = `${userId}/${decodedFileName}`;
 
