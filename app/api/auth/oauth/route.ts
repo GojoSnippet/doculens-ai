@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/server/server';
+import { createServerClient } from '@supabase/ssr';
 import { getBaseUrl } from '@/utils/getBaseUrl';
 
 export const dynamic = 'force-dynamic';
@@ -12,8 +12,29 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid provider' }, { status: 400 });
   }
 
-  const supabase = await createServerSupabaseClient();
   const baseUrl = getBaseUrl();
+
+  // Create a response that we'll set cookies on
+  // We'll update the redirect URL after getting the OAuth URL
+  let response = NextResponse.next();
+
+  // Create Supabase client that sets cookies on the response
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
@@ -32,7 +53,12 @@ export async function GET(request: NextRequest) {
   }
 
   if (data.url) {
-    return NextResponse.redirect(data.url);
+    // Create redirect response and copy cookies from the temp response
+    const redirectResponse = NextResponse.redirect(data.url);
+    response.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectResponse;
   }
 
   return NextResponse.redirect(`${baseUrl}?error=${encodeURIComponent('Failed to get OAuth URL')}`);
