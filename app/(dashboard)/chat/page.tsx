@@ -6,6 +6,7 @@ import WebsiteWiever from './components/WebsiteWiever';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserInfo } from '@/lib/server/supabase';
 import { createServerSupabaseClient } from '@/lib/server/server';
+import { decodeBase64 } from '@/utils/base64';
 
 interface PageProps {
   searchParams: Promise<Record<string, string>>;
@@ -28,7 +29,7 @@ export default async function ChatPage(props: PageProps) {
       {searchParams.url ? (
         <WebsiteWiever url={decodeURIComponent(searchParams.url)} />
       ) : searchParams.pdf ? (
-        <DocumentComponent fileName={decodeURIComponent(searchParams.pdf)} />
+        <DocumentComponent fileName={searchParams.pdf} />
       ) : null}
     </div>
   );
@@ -43,7 +44,7 @@ async function DocumentComponent({ fileName }: { fileName: string }) {
   if (userId) {
     try {
       const supabase = await createServerSupabaseClient();
-      const decodedFileName = decodeURIComponent(fileName);
+      const decodedFileName = decodeBase64(fileName);
       const filePath = `${userId}/${decodedFileName}`;
 
       const { data, error } = await supabase.storage
