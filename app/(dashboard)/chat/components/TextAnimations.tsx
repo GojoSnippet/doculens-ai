@@ -34,7 +34,7 @@ export function Typewriter({ text, delay = 50, className = '' }: TypewriterProps
 }
 
 interface TextRevealProps {
-  children: string;
+  children: React.ReactNode;
   delay?: number;
   className?: string;
 }
