@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Bell, ArrowLeft, Zap, Crown, Rocket } from 'lucide-react';
+import { Sparkles, ArrowLeft, Zap, Crown, Rocket } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SubscriptionPage() {

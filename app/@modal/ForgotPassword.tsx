@@ -12,7 +12,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useFormStatus } from 'react-dom';
 import { resetPasswordForEmail } from './action';
 import { usePathname } from 'next/navigation';
-import { Loader2, CheckCircle2, Mail } from 'lucide-react';
+import { Loader2, Mail } from 'lucide-react';
 
 export default function ForgotPassword() {
   const [open, setOpen] = useState(false);

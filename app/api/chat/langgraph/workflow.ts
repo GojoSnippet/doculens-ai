@@ -98,7 +98,7 @@ async function retrieveDocuments(state: typeof RAGState.State): Promise<Partial<
 
 // Node: Grade documents for relevance
 async function gradeDocuments(state: typeof RAGState.State): Promise<Partial<typeof RAGState.State>> {
-  const { documents, question } = state;
+  const { documents, question: _question } = state;
 
   if (documents.length === 0) {
     return { relevanceScore: 0 };
@@ -145,7 +145,7 @@ function shouldRetrieve(state: typeof RAGState.State): 'rewrite' | 'output' {
 }
 
 // Node: Output results
-async function outputResults(state: typeof RAGState.State): Promise<Partial<typeof RAGState.State>> {
+async function outputResults(_state: typeof RAGState.State): Promise<Partial<typeof RAGState.State>> {
   // Documents are already retrieved and graded, just pass through
   return {};
 }

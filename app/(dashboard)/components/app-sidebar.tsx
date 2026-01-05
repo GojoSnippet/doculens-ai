@@ -5,8 +5,7 @@ import {
   GalleryVerticalEnd,
   MessageSquare,
   Upload,
-  Home,
-  History
+  Home
 } from 'lucide-react';
 import { NavMain } from './nav-main';
 import { NavUser } from './nav-user';

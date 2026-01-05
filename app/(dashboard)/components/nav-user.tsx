@@ -4,7 +4,6 @@ import {
   BadgeCheck,
   Check,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
   Monitor,
   Moon,
@@ -35,7 +34,7 @@ import {
 
 export function NavUser({
   user,
-  hasActiveSubscription = false
+  hasActiveSubscription: _hasActiveSubscription = false
 }: {
   user: {
     name: string;

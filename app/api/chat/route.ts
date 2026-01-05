@@ -200,7 +200,7 @@ const getModel = (selectedModel: string) => {
 };
 
 // GET - Fetch chat previews for sidebar
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   const user = await getSession();
 
   if (!user || !user.sub) {

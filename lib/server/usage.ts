@@ -35,6 +35,7 @@ export async function getUserUsage(): Promise<UsageStats | null> {
 
   const supabase = await createServerSupabaseClient();
   
+  // @ts-expect-error - Custom RPC function not in generated types
   const { data, error } = await supabase.rpc('get_user_usage', {
     p_user_id: user.sub
   });
@@ -56,7 +57,7 @@ export async function getUserUsage(): Promise<UsageStats | null> {
     };
   }
 
-  return data as UsageStats;
+  return data as unknown as UsageStats;
 }
 
 /**
@@ -73,6 +74,7 @@ export async function checkUsageLimit(
 
   const supabase = await createServerSupabaseClient();
   
+  // @ts-expect-error - Custom RPC function not in generated types
   const { data, error } = await supabase.rpc('check_usage_limit', {
     p_user_id: user.sub,
     p_action: action,
@@ -85,7 +87,7 @@ export async function checkUsageLimit(
     return { allowed: true, reason: '', current: 0, limit: -1 };
   }
 
-  return data as LimitCheck;
+  return data as unknown as LimitCheck;
 }
 
 /**
@@ -100,6 +102,7 @@ export async function incrementUsage(
 
   const supabase = await createServerSupabaseClient();
   
+  // @ts-expect-error - Custom RPC function not in generated types
   const { error } = await supabase.rpc('increment_usage', {
     p_user_id: user.sub,
     p_action: action,

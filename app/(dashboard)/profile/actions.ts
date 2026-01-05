@@ -11,21 +11,21 @@ export async function signOut() {
   redirect('/');
 }
 
-export async function requestPasswordReset(formData: FormData) {
+export async function requestPasswordReset(formData: FormData): Promise<void> {
   const email = formData.get('email') as string;
-  
+
   if (!email) {
-    return { error: 'Email is required' };
+    redirect('/profile?error=email-required');
   }
 
   const supabase = await createServerSupabaseClient();
-  
+
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/redirect/auth-password-update`,
   });
 
   if (error) {
-    return { error: error.message };
+    redirect(`/profile?error=${encodeURIComponent(error.message)}`);
   }
 
   redirect('/profile?message=password-reset-sent');

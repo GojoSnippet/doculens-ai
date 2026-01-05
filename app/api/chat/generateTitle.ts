@@ -10,7 +10,7 @@ export async function generateChatTitle(firstMessage: string): Promise<string> {
   try {
     const { text } = await generateText({
       model: openai('gpt-4o-mini'),
-      maxTokens: 20,
+      maxOutputTokens: 20,
       messages: [
         {
           role: 'system',
